@@ -1,0 +1,10 @@
+*.class
+*.iml
+*.pdf
+/target
+compiler.xml
+google-java-format.xml
+.idea
+/client/.idea/
+/server/.idea/
+/.idea/
