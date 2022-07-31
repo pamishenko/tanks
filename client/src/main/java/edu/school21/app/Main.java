@@ -19,9 +19,12 @@ public class Main {
 //        String ip = arguments.getServer();
 //        int port = arguments.getPort();
 //        String username = arguments.getName();
+        // sout
+
         String ip = "127.0.0.1"; // FIXME - это заглушка для локальных тестов
         int port = 8001;
         String username = "User";
+
 
 
         Socket clientSocket = new Socket(ip, port);
