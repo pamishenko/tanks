@@ -21,6 +21,7 @@ public class Windows extends Application {
         primaryStage.setWidth(1000);
         primaryStage.setHeight(600);
 
+
         InputStream iconStream = getClass().getResourceAsStream("/images/player.png");
         Image image = new Image(iconStream);
         primaryStage.getIcons().add(image);
