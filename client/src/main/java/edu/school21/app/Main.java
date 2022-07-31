@@ -64,6 +64,7 @@ public class Main  extends Application {
         primaryStage.getIcons().add(image);
 
         Label helloWorldLabel = new Label("Hello world!");
+
         helloWorldLabel.setAlignment(Pos.CENTER);
         Scene primaryScene = new Scene(helloWorldLabel);
         primaryStage.setScene(primaryScene);
