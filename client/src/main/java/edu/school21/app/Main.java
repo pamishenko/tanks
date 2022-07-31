@@ -1,7 +1,9 @@
 package edu.school21.app;
 
 import com.beust.jcommander.JCommander;
+import edu.school21.service.Windows;
 import edu.school21.utils.Args;
+import javafx.application.Application;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,6 +25,7 @@ public class Main {
         int port = 8001;
         String username = "User";
 
+        new Windows().launch();
 
         Socket clientSocket = new Socket(ip, port);
         BufferedReader bufferedReader =
