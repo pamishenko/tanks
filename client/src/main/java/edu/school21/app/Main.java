@@ -1,7 +1,9 @@
 package edu.school21.app;
 
 import com.beust.jcommander.JCommander;
+import edu.school21.service.Windows;
 import edu.school21.utils.Args;
+import javafx.application.Application;
 
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -32,6 +34,7 @@ public class Main  extends Application {
         int port = 8001;
         String username = "User";
 
+        new Windows().launch();
 
 
         Socket clientSocket = new Socket(ip, port);
