@@ -34,11 +34,54 @@ public class Main {
                 new OutputStreamWriter(clientSocket.getOutputStream());
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in)); // FIXME - Заглушка пока нет javaFX и клавиш
 
-        while (true){
-            String request = reader.readLine() + "\n";
-            outputStreamWriter.write(request);
-            outputStreamWriter.flush();
-            System.out.println("-> " + bufferedReader.readLine());
+        Thread threadSend = new Thread(new Runnable() {
+            @Override
+            public void run(){
+                System.out.println("Task #1 is running");
+                while (true){
+                    try {
+                        char command;  // FIXME сюда нужно вставить метод читающий с клавиатуры и возвращающий нужную букву
+                        char[] temp = new char[1];  // удалить после подключения FX
+                        reader.read(temp);          // удалить после подключения FX
+                        command = temp[0];          // удалить после подключения FX
+                        outputStreamWriter.write(command);
+                        outputStreamWriter.flush();
+                        // FIXME сдесь нужно вызвать интерпретатор для собственных событий
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+
+        Thread threadReciev = new Thread(new Runnable() {
+            @Override
+            public void run(){
+                System.out.println("Task #2 is running");
+                while (true){
+                    try {
+                        char command;               // удалить после подключения FX
+                        char[] temp = new char[1];  // удалить после подключения FX
+                        bufferedReader.read(temp);  // удалить после подключения FX
+                        command = temp[0];
+                        if (temp[0] != '\n')// удалить после подключения FX
+                            System.out.println(command); // удалить после подключения FX
+                        // FIXME сдесь нужно вызвать интерпретатор для событий противника
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+
+        threadSend.start();
+        threadReciev.start();
+
+        try {
+            threadSend.join();
+            threadReciev.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }
