@@ -27,25 +27,53 @@ public class Main {
         Socket client2Socket = serverSocket.accept();
         System.out.println("client2 connected");
 
-        BufferedReader bufferedReader1 =
-                new BufferedReader(new InputStreamReader(client1Socket.getInputStream()));
+        InputStreamReader bufferedReader1 = new InputStreamReader(client1Socket.getInputStream());
         OutputStreamWriter outputStreamWriter1 =
                 new OutputStreamWriter(client1Socket.getOutputStream());
-        BufferedReader bufferedReader2 =
-                new BufferedReader(new InputStreamReader(client1Socket.getInputStream()));
-        OutputStreamWriter outputStreamWriter2 =
-                new OutputStreamWriter(client1Socket.getOutputStream());
 
-        while (true){
-            char[] buf = new char[1024];
-            bufferedReader1.read(buf);
-            String signal1 = buf[0] + "\n";
-            bufferedReader2.read(buf);
-            String signal2 = buf[0] + "\n";
-            outputStreamWriter1.write(signal2);
-            outputStreamWriter1.flush();
-            outputStreamWriter2.write(signal1);
-            outputStreamWriter2.flush();
+        InputStreamReader bufferedReader2 = new InputStreamReader(client2Socket.getInputStream());
+
+        OutputStreamWriter outputStreamWriter2 =
+                new OutputStreamWriter(client2Socket.getOutputStream());
+
+        Thread thread1 = new Thread(new Runnable() {
+            @Override
+            public void run(){
+                System.out.println("Task #1 is running");
+                while (true){
+                    try {
+                        outputStreamWriter2.write(bufferedReader1.read());
+                        outputStreamWriter2.flush();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+
+        Thread thread2 = new Thread(new Runnable() {
+            @Override
+            public void run(){
+                System.out.println("Task #2 is running");
+                while (true){
+                    try {
+                        outputStreamWriter1.write(bufferedReader2.read());
+                        outputStreamWriter1.flush();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+
+        thread1.start();
+        thread2.start();
+
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }
