@@ -32,6 +32,7 @@ public class Windows extends Application {
     private int sizeHealth;
     Scene scene = new Scene(root, winWidth, winHeight);//??????
 
+
     // бордюр и жизнь
     Image border = new Image(getClass().getResourceAsStream("/images/border.png"));
     ImageView imageViewBorderPl = new ImageView(border);
@@ -168,8 +169,8 @@ public class Windows extends Application {
 
     public void bulletAnimation() {
         bullets.forEach((bon) -> {
-            bon.imageViewBullet.setY(bon.imageViewBullet.getY() - 5 );
-            if(imageViewPlayer.getBoundsInParent().intersects(bon.imageViewBullet.getBoundsInParent())) {
+            bon.getImageViewBullet().setY(bon.getImageViewBullet().getY() - 5 );
+            if(imageViewPlayer.getBoundsInParent().intersects(bon.getImageViewBullet().getBoundsInParent())) {
                 bon = null;
                 health -= 5;
                 System.out.println("width = " + imageViewLifePl.getFitWidth());
@@ -180,8 +181,8 @@ public class Windows extends Application {
                     System.exit(0);
                 }
             }
-            if (bon.imageViewBullet.getY() <= 0) { //bon.imageViewBullet.getY() ==
-                root.getChildren().remove(bon.imageViewBullet);
+            if (bon.getImageViewBullet().getY() <= 0) { //bon.imageViewBullet.getY() ==
+                root.getChildren().remove(bon.getImageViewBullet());
             }
         });
     }
@@ -203,7 +204,7 @@ public class Windows extends Application {
             keys.replace(KeyCode.SPACE, false);
             bul = new Bullet(imageViewPlayer);
             bullets.add(bul);
-            root.getChildren().add(bul.imageViewBullet);
+            root.getChildren().add(bul.getImageViewBullet());
 
         }
     }

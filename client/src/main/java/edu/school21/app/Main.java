@@ -2,6 +2,7 @@ package edu.school21.app;
 
 import com.beust.jcommander.JCommander;
 import edu.school21.service.Bullet;
+import edu.school21.service.EnemyBullet;
 import edu.school21.utils.Args;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -45,8 +46,11 @@ public class Main extends Application{
     private int winWidth = 1200;
     private int winHeight = 720;
     private Bullet bul;
+
+    private EnemyBullet bulEn;
     private HashMap<KeyCode, Boolean> keys = new HashMap<>();
     private ArrayList<Bullet> bullets = new ArrayList<>();
+    private ArrayList<EnemyBullet> badBullets = new ArrayList<>();
     private Group root = new Group();
     private int sizeHealth;
     Scene scene = new Scene(root, winWidth, winHeight);//??????
@@ -59,6 +63,9 @@ public class Main extends Application{
 
     int health = 100;
 
+    Image field = new Image(getClass().getResourceAsStream("/images/field.png"));
+    ImageView imageViewField = new ImageView(field);
+
 
     private Image player = new Image(getClass().getResourceAsStream("/images/player.png"));
     ImageView imageViewPlayer = new ImageView(player);
@@ -66,6 +73,10 @@ public class Main extends Application{
 
     Image enemy = new Image(getClass().getResourceAsStream("/images/enemy.png"));
     ImageView imageViewEnemy = new ImageView(enemy);
+
+    Image fail = new Image(getClass().getResourceAsStream("/images/fail.png"));
+    ImageView imageViewFail = new ImageView(fail);
+
 
     @Override
     public void init() throws Exception {
@@ -94,8 +105,7 @@ public class Main extends Application{
 
 
 // фон
-        Image field = new Image(getClass().getResourceAsStream("/images/field.png"));
-        ImageView imageViewField = new ImageView(field);
+
         imageViewField.setFitHeight(winHeight);
         imageViewField.setFitWidth(winWidth);
 // игрок 1
@@ -170,11 +180,12 @@ public class Main extends Application{
             public void handle(long now) {
                 try {
                     update(outputStreamWriter);
+                    bulletAnimation();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
 
-                bulletAnimation();
+//                bulletAnimation();
             }
         };
         timer.start();
@@ -190,8 +201,12 @@ public class Main extends Application{
                 while (true){
                     try {
                         bufferedReader.read(buf);
-                        if (buf[0] == 'a' ||  buf[0] == 'd' || buf[0] == 'x')
+                        if (buf[0] == 'a' ||  buf[0] == 'd') {
                             updateEnemy(buf[0]);
+                        }
+                        if (buf[0] == 'x') {
+                            bulletEnemyAnimation();
+                        }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -216,21 +231,47 @@ public class Main extends Application{
 
     public void bulletAnimation() {
         bullets.forEach((bon) -> {
-            bon.imageViewBullet.setY(bon.imageViewBullet.getY() - 5 );
-            if(imageViewPlayer.getBoundsInParent().intersects(bon.imageViewBullet.getBoundsInParent())) {
+            bon.getImageViewBullet().setY(bon.getImageViewBullet().getY() - 5 );
+            if(imageViewPlayer.getBoundsInParent().intersects(bon.getImageViewBullet().getBoundsInParent())) {
                 bon = null;
                 health -= 5;
                 System.out.println("width = " + imageViewLifePl.getFitWidth());
                 imageViewLifePl.setFitWidth(imageViewLifePl.getFitWidth() - sizeHealth/20);
                 System.out.println(health);
                 if (health <= 0) {
+                    imageViewFail.setY(bon.getImageViewBullet().getY());
+                    imageViewFail.setX(bon.getImageViewBullet().getX());
+                    root.getChildren().add(imageViewFail);
                     System.out.println("THE END");
                     System.exit(0);
                 }
             }
-            if (bon.imageViewBullet.getY() <= 0) { //bon.imageViewBullet.getY() ==
-                root.getChildren().remove(bon.imageViewBullet);
+            if (bon.getImageViewBullet().getY() <= 0) { //bon.imageViewBullet.getY() ==
+                root.getChildren().remove(bon.getImageViewBullet());
             }
+        });
+    }
+
+    public void bulletEnemyAnimation() {
+         badBullets.forEach((bonEn) -> {
+             bonEn.getImageViewBulletEn().setY(bonEn.getImageViewBulletEn().getY() + 5 );
+            if(imageViewPlayer.getBoundsInParent().intersects(bonEn.getImageViewBulletEn().getBoundsInParent())) {
+                bonEn = null;
+                health -= 5;
+                System.out.println("width = " + imageViewLifePl.getFitWidth());
+                imageViewLifePl.setFitWidth(imageViewLifePl.getFitWidth() - sizeHealth/20);
+                System.out.println(health);
+                if (health <= 0) {
+                    imageViewFail.setY(bonEn.getImageViewBulletEn().getY());
+                    imageViewFail.setX(bonEn.getImageViewBulletEn().getX());
+                    root.getChildren().add(imageViewFail);
+                    System.out.println("THE END");
+                    System.exit(0);
+                }
+            }
+//            if (bonEn.getImageViewBulletEn().getY() <= 0) { //bon.imageViewBullet.getY() ==
+//                root.getChildren().remove(bonEn.getImageViewBulletEn());
+//            }
         });
     }
 
@@ -239,22 +280,22 @@ public class Main extends Application{
     }
 
     void updateEnemy(char ch) throws IOException {
-        if (ch == 'd' && imageViewEnemy.getX() < scene.getWidth() - player.getWidth() - 10) {
+        if (ch == 'd' && imageViewEnemy.getX() >= 10) {
 //            motionRight ('?');
-            imageViewEnemy.setX(imageViewEnemy.getX() + 5);
-        } else if (ch == 'a' && imageViewEnemy.getX() >= 10) {
-//            motionLeft('!');
             imageViewEnemy.setX(imageViewEnemy.getX() - 5);
+        } else if (ch == 'a' && imageViewEnemy.getX() <= scene.getWidth() - player.getWidth() - 10) {
+//            motionLeft('!');
+            imageViewEnemy.setX(imageViewEnemy.getX() + 5);
         } else if (ch == 'x') {
-            bul = new Bullet(imageViewEnemy);
-            bullets.add(bul);
-            root.getChildren().add(bul.imageViewBullet);
+            bulEn = new EnemyBullet(imageViewEnemy);
+            badBullets.add(bulEn);
+            root.getChildren().add(bulEn.getImageViewBulletEn());
 
         }
     }
 
     public void update (OutputStreamWriter outputStreamWriter) throws IOException {
-        if (isPressed(KeyCode.RIGHT) && imageViewPlayer.getX() < scene.getWidth() - player.getWidth() - 10) {
+        if (isPressed(KeyCode.RIGHT) && imageViewPlayer.getX() <= scene.getWidth() - player.getWidth() - 10) {
 //            motionRight ('?');
             imageViewPlayer.setX(imageViewPlayer.getX() + 5);
             outputStreamWriter.write('d');
@@ -272,7 +313,7 @@ public class Main extends Application{
             outputStreamWriter.flush();
             bul = new Bullet(imageViewPlayer);
             bullets.add(bul);
-            root.getChildren().add(bul.imageViewBullet);
+            root.getChildren().add(bul.getImageViewBullet());
 
         }
     }

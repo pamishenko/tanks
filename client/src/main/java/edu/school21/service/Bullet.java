@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Bullet {
 
     private Image bullet = new Image(getClass().getResourceAsStream("/images/playerBullet.png"));
-    public ImageView imageViewBullet = new ImageView(bullet);
+    private ImageView imageViewBullet = new ImageView(bullet);
 
 
 
@@ -18,4 +18,7 @@ public class Bullet {
         imageViewBullet.setY(player.getY() - 12);
     }
 
+    public ImageView getImageViewBullet() {
+        return imageViewBullet;
+    }
 }
