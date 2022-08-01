@@ -60,9 +60,7 @@ public class Windows extends Application {
 // перехват нажатий клавиатуры
 
         scene.setOnKeyPressed(event->keys.put(event.getCode(), true));
-        scene.setOnKeyReleased(event-> {
-            keys.put(event.getCode(), false);
-        });
+        scene.setOnKeyReleased(event->  keys.put(event.getCode(), false));
 
 // фон
         Image field = new Image(getClass().getResourceAsStream("/images/field.png"));
@@ -143,7 +141,7 @@ public class Windows extends Application {
         };
         timer.start();
 
-    // вывод сцены
+        // вывод сцены
         primaryStage.show();
 
     }
@@ -172,9 +170,11 @@ public class Windows extends Application {
 
     public void update () {
         if (isPressed(KeyCode.RIGHT) && imageViewPlayer.getX() < scene.getWidth() - player.getWidth() - 10) {
+//            motionRight ('?');
             imageViewPlayer.setX(imageViewPlayer.getX() + 5);
         }
         else if (isPressed(KeyCode.LEFT) && imageViewPlayer.getX() >= 10) {
+//            motionLeft('!');
             imageViewPlayer.setX(imageViewPlayer.getX() - 5);
         }
         else if (isPressed(KeyCode.SPACE)) {
@@ -186,5 +186,14 @@ public class Windows extends Application {
         }
     }
 
+//    public void motionRight (char ch) {
+//        imageViewPlayer.setX(imageViewPlayer.getX() + 5);
+//        System.out.println(ch);
+//    }
+//
+//    public void motionLeft(char ch) {
+//        imageViewPlayer.setX(imageViewPlayer.getX() - 5);
+//        System.out.println(ch);
+//    }
 
 }
