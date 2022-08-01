@@ -132,6 +132,14 @@ public class Windows extends Application {
         Image image = new Image(iconStream);
         primaryStage.getIcons().add(image);
 
+        motion('A');        // ввести символ
+
+        // вывод сцены
+        primaryStage.show();
+
+    }
+
+    public void motion(char ch) {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -140,10 +148,6 @@ public class Windows extends Application {
             }
         };
         timer.start();
-
-        // вывод сцены
-        primaryStage.show();
-
     }
 
     public void bulletAnimation() {
