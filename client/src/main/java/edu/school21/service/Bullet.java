@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Bullet {
 
     private Image bullet = new Image(getClass().getResourceAsStream("/images/playerBullet.png"));
-    ImageView imageViewBullet = new ImageView(bullet);
+    public ImageView imageViewBullet = new ImageView(bullet);
 
 
 

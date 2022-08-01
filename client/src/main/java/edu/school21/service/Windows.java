@@ -24,7 +24,7 @@ import java.util.HashMap;
 public class Windows extends Application {
 
     private int winWidth = 1200;
-    private int winHeight = 1200;
+    private int winHeight = 720;
     private Bullet bul;
     private HashMap<KeyCode, Boolean> keys = new HashMap<>();
     private ArrayList<Bullet> bullets = new ArrayList<>();
@@ -141,23 +141,30 @@ public class Windows extends Application {
         Image image = new Image(iconStream);
         primaryStage.getIcons().add(image);
 
-        motion('A');        // ввести символ
-
+//        motion('A');        // ввести символ
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                update('a');
+                bulletAnimation();
+            }
+        };
+        timer.start();
         // вывод сцены
         primaryStage.show();
 
     }
 
-    public void motion(char ch) {
-        AnimationTimer timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                update();
-                bulletAnimation();
-            }
-        };
-        timer.start();
-    }
+//    public void motion(char ch) {
+//        AnimationTimer timer = new AnimationTimer() {
+//            @Override
+//            public void handle(long now) {
+//                update();
+//                bulletAnimation();
+//            }
+//        };
+//        timer.start();
+//    }
 
     public void bulletAnimation() {
         bullets.forEach((bon) -> {
@@ -183,7 +190,7 @@ public class Windows extends Application {
         return keys.getOrDefault(key, false);
     }
 
-    public void update () {
+    public void update (char ch) {
         if (isPressed(KeyCode.RIGHT) && imageViewPlayer.getX() < scene.getWidth() - player.getWidth() - 10) {
 //            motionRight ('?');
             imageViewPlayer.setX(imageViewPlayer.getX() + 5);
