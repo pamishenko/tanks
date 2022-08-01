@@ -26,7 +26,7 @@ public class Main {
         int port = 8001;
         String username = "User";
 
-        new Windows().launch();
+
 
         Socket clientSocket = new Socket(ip, port);
         BufferedReader bufferedReader =
@@ -35,22 +35,29 @@ public class Main {
                 new OutputStreamWriter(clientSocket.getOutputStream());
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in)); // FIXME - Заглушка пока нет javaFX и клавиш
 
+
+
+        Windows win = new Windows();
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run(){
+                win.launch();
+            }
+        });
+        thread.start();
+
         Thread threadSend = new Thread(new Runnable() {
             @Override
             public void run(){
                 System.out.println("Task #1 is running");
                 while (true){
-                    try {
-                        char command;  // FIXME сюда нужно вставить метод читающий с клавиатуры и возвращающий нужную букву
-                        char[] temp = new char[1];  // удалить после подключения FX
-                        reader.read(temp);          // удалить после подключения FX
-                        command = temp[0];          // удалить после подключения FX
-                        outputStreamWriter.write(command);
-                        outputStreamWriter.flush();
-                        // FIXME сдесь нужно вызвать интерпретатор для собственных событий
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    char command = win.getKey();  // FIXME сюда нужно вставить метод читающий с клавиатуры и возвращающий нужную букву
+//                        char[] temp = new char[1];  // удалить после подключения FX
+//                        reader.read(temp);          // удалить после подключения FX
+//                        command = temp[0];          // удалить после подключения FX
+//                        outputStreamWriter.write(command);
+//                        outputStreamWriter.flush();
+                    // FIXME сдесь нужно вызвать интерпретатор для собственных событий
                 }
             }
         });
@@ -79,6 +86,7 @@ public class Main {
         threadReciev.start();
 
         try {
+            thread.join();
             threadSend.join();
             threadReciev.join();
         } catch (InterruptedException e) {
