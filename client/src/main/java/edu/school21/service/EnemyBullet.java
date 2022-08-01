@@ -12,7 +12,7 @@ public class EnemyBullet {
 
     public EnemyBullet(ImageView player) {
         imageViewBulletEn.setX(player.getX() + player.getImage().getWidth() / 2  - bullet.getWidth()/2);
-        imageViewBulletEn.setY(player.getY() - 12);
+        imageViewBulletEn.setY(player.getY() - 10);
     }
 
 }

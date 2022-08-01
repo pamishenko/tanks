@@ -29,9 +29,16 @@ public class Windows extends Application {
     private HashMap<KeyCode, Boolean> keys = new HashMap<>();
     private ArrayList<Bullet> bullets = new ArrayList<>();
     private Group root = new Group();
+    private int sizeHealth;
     Scene scene = new Scene(root, winWidth, winHeight);//??????
 
-    int score = 100;
+    // бордюр и жизнь
+    Image border = new Image(getClass().getResourceAsStream("/images/border.png"));
+    ImageView imageViewBorderPl = new ImageView(border);
+    Image life = new Image(getClass().getResourceAsStream("/images/life.png"));
+    ImageView imageViewLifePl = new ImageView(life);
+
+    int health = 100;
 
 
     private Image player = new Image(getClass().getResourceAsStream("/images/player.png"));
@@ -80,16 +87,16 @@ public class Windows extends Application {
         imageViewEnemy.setX(winWidth/2 - enemy.getWidth()/2);
         imageViewEnemy.setY(primaryStage.getScene().getHeight() - (winHeight - 80));
 
-// бордюр и жизнь
-        Image border = new Image(getClass().getResourceAsStream("/images/border.png"));
-        Image life = new Image(getClass().getResourceAsStream("/images/life.png"));
+//// бордюр и жизнь
+//        Image border = new Image(getClass().getResourceAsStream("/images/border.png"));
+//        Image life = new Image(getClass().getResourceAsStream("/images/life.png"));
 
 //  бордюр игрока
-        ImageView imageViewLifePl = new ImageView(life);
+//        ImageView imageViewLifePl = new ImageView(life);
         imageViewLifePl.setFitHeight(winHeight/30);
         imageViewLifePl.setFitWidth(winWidth/4);
 
-        ImageView imageViewBorderPl = new ImageView(border);
+//        ImageView imageViewBorderPl = new ImageView(border);
         imageViewBorderPl.setFitHeight(winHeight/30);
         imageViewBorderPl.setFitWidth(winWidth/4);
 
@@ -106,6 +113,8 @@ public class Windows extends Application {
         ImageView imageViewBorderEn = new ImageView(border);
         imageViewBorderEn.setFitHeight(winHeight/30);
         imageViewBorderEn.setFitWidth(winWidth/4);
+
+        sizeHealth = winWidth/4;
 
         imageViewLifeEn.setX(scene.getWidth() - imageViewBorderEn.getFitWidth() - 20);
         imageViewLifeEn.setY(20);
@@ -152,17 +161,19 @@ public class Windows extends Application {
 
     public void bulletAnimation() {
         bullets.forEach((bon) -> {
-            bon.imageViewBullet.setY(bon.imageViewBullet.getY() - 10);
+            bon.imageViewBullet.setY(bon.imageViewBullet.getY() - 5 );
             if(imageViewPlayer.getBoundsInParent().intersects(bon.imageViewBullet.getBoundsInParent())) {
                 bon = null;
-//                score -= 5;
-//                System.out.println(score);
-//                if (score <= 0) {
-//                    System.out.println("THE END");
-//                    System.exit(0);
-//                }
+                health -= 5;
+                System.out.println("width = " + imageViewLifePl.getFitWidth());
+                imageViewLifePl.setFitWidth(imageViewLifePl.getFitWidth() - sizeHealth/20);
+                System.out.println(health);
+                if (health <= 0) {
+                    System.out.println("THE END");
+                    System.exit(0);
+                }
             }
-            if (bon.imageViewBullet.getY() <= 10) { //bon.imageViewBullet.getY() ==
+            if (bon.imageViewBullet.getY() <= 0) { //bon.imageViewBullet.getY() ==
                 root.getChildren().remove(bon.imageViewBullet);
             }
         });
@@ -189,6 +200,7 @@ public class Windows extends Application {
 
         }
     }
+
 
 //    public void motionRight (char ch) {
 //        imageViewPlayer.setX(imageViewPlayer.getX() + 5);
